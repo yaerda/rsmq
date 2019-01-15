@@ -1,26 +1,35 @@
 package cn.fhou77.rsmq.message;
 
-import cn.fhou77.rsmq.config.RedisPool;
 import com.alibaba.fastjson.JSON;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 
 import java.util.List;
 
 @Service
 public class MessageProducer {
 
-    private Jedis jedis = RedisPool.getJedis();
+    @Autowired
+    JedisPool jedisPool;
+
 
     public void sendMessage(String key, String content) {
-        jedis.lpush(Message.genPendingKey(key), content);
+        Jedis jedis = jedisPool.getResource();
+        jedis.lpush(key, content);
+        jedis.close();
     }
 
     public void sendMessage(String key, List<?> contentList) {
-        jedis.lpush(Message.genPendingKey(key), contentList.stream().map(JSON::toJSONString).toArray(String[]::new));
+        Jedis jedis = jedisPool.getResource();
+        jedis.lpush(key, contentList.stream().map(JSON::toJSONString).toArray(String[]::new));
+        jedis.close();
     }
 
     public void sendImpotantMessage(String key, String content) {
-        jedis.lpush(Message.genPendingKey(key), content);
+        Jedis jedis = jedisPool.getResource();
+        jedis.lpush(key, content);
+        jedis.close();
     }
 }

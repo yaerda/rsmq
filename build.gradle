@@ -29,6 +29,6 @@ dependencies {
     compile group: 'redis.clients', name: 'jedis', version: '2.9.0'
     compile('org.apache.commons:commons-lang3:3.6')
     compile('com.alibaba:fastjson:1.2.37')
-
+    compile('org.springframework.boot:spring-boot-starter-web')
     testImplementation('org.springframework.boot:spring-boot-starter-test')
 }
